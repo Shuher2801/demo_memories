@@ -31,7 +31,7 @@ public class WordController {
         } catch (FileValidationException e){
             log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ResponseMessage(String.format("%s, Please upload correct file", e.getMessage())));
+                    .body(new ResponseMessage(String.format("%s, please upload correct excel file", e.getMessage())));
         }
         catch (Exception e) {
             String message = String.format("Could not upload the file: %s", file.getOriginalFilename());

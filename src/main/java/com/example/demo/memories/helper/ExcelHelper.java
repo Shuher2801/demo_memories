@@ -76,8 +76,8 @@ public class ExcelHelper {
     public static void validateFile(MultipartFile file){
 
         if (!TYPE.equals(file.getContentType())) {
-            log.error("invalid file type");
-            throw new FileValidationException("invalid file type");
+            log.error("Invalid file type");
+            throw new FileValidationException("Invalid file type");
         }
     }
 }
