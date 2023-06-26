@@ -1,6 +1,7 @@
-package com.example.demo.memories.helper;
+package com.example.demo.memories.unit.helper;
 
 import com.example.demo.memories.exception.FileValidationException;
+import com.example.demo.memories.helper.ExcelHelper;
 import com.example.demo.memories.model.Word;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -11,9 +12,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashSet;
@@ -22,9 +23,9 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 @SpringBootTest
+@ActiveProfiles("unit-test")
 public class ExcelHelperTest {
 
     @Mock
