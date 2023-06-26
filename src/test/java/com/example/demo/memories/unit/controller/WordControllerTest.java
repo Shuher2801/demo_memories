@@ -1,5 +1,6 @@
-package com.example.demo.memories.controller;
+package com.example.demo.memories.unit.controller;
 
+import com.example.demo.memories.controller.WordController;
 import com.example.demo.memories.exception.FileValidationException;
 import com.example.demo.memories.message.ResponseMessage;
 import com.example.demo.memories.service.WordService;
@@ -9,6 +10,7 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -21,6 +23,7 @@ import static org.mockito.Mockito.*;
 
 
 @SpringBootTest
+@ActiveProfiles("unit-test")
 public class WordControllerTest {
 
     @Mock
