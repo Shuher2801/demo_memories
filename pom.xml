@@ -11,8 +11,16 @@
 	<groupId>com.example</groupId>
 	<artifactId>demo.memories</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
 	<name>demo.memories</name>
 	<description>Demo project for Spring Boot</description>
+
+	<modules>
+		<module>telegram-bot</module>
+		<module>upload-service</module>
+	</modules>
+
+
 	<properties>
 		<java.version>17</java.version>
 		<apache.poi.version>5.2.2</apache.poi.version>
@@ -25,11 +33,6 @@
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-
-		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
@@ -38,16 +41,6 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi-ooxml</artifactId>
-			<version>${apache.poi.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.telegram</groupId>
-			<artifactId>telegrambots</artifactId>
-			<version>${telegram.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
