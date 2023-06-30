@@ -4,6 +4,7 @@ import com.example.demo.memories.controller.WordController;
 import com.example.demo.memories.exception.FileValidationException;
 import com.example.demo.memories.message.ResponseMessage;
 import com.example.demo.memories.service.WordService;
+import com.example.demo.memories.service.impl.WordServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -42,7 +43,7 @@ public class WordControllerTest {
 
         assertEquals(response.getStatusCode(), HttpStatus.OK);
         assertEquals("File TestFile was uploaded successfully", response.getBody().getMessage());
-        verify(wordServiceMock, times(1)).save(file);
+        verify(wordServiceMock, times(1)).parseAndSave(file);
     }
 
     @Test
@@ -50,13 +51,13 @@ public class WordControllerTest {
 
         MultipartFile file = mock(MultipartFile.class);
         FileValidationException exception = new FileValidationException("Invalid file type");
-        doThrow(exception).when(wordServiceMock).save(any());
+        doThrow(exception).when(wordServiceMock).parseAndSave(any());
 
         ResponseEntity<ResponseMessage> response =  wordController.uploadFile(file);
 
         assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
         assertEquals("Invalid file type, please upload correct excel file", Objects.requireNonNull(response.getBody()).getMessage());
-        verify(wordServiceMock, times(1)).save(file);
+        verify(wordServiceMock, times(1)).parseAndSave(file);
     }
 
     @Test
@@ -66,12 +67,12 @@ public class WordControllerTest {
         when(file.getOriginalFilename()).thenReturn("TestFile");
 
         RuntimeException exception = new RuntimeException("Invalid file type");
-        doThrow(exception).when(wordServiceMock).save(file);
+        doThrow(exception).when(wordServiceMock).parseAndSave(file);
 
         ResponseStatusException responseStatusException =
                 assertThrows(ResponseStatusException.class, ()-> wordController.uploadFile(file));
         assertEquals(responseStatusException.getStatusCode(), HttpStatus.EXPECTATION_FAILED);
         assertEquals("Could not upload the file: TestFile", responseStatusException.getReason());
-        verify(wordServiceMock, times(1)).save(file);
+        verify(wordServiceMock, times(1)).parseAndSave(file);
     }
 }

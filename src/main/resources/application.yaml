@@ -1,8 +1,8 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/memories
-    username:
-    password:
+    username: postgres
+    password: 123
     driver-class-name: org.postgresql.Driver
   jpa:
     database: postgresql
@@ -17,3 +17,7 @@ spring:
     multipart:
       max-file-size: 2MB
       max-request-size: 2MB
+
+bot:
+  name: my_spring_boot_bot
+  token: 6166202220:AAH2P8FJWFpniQz-yZuQIS--vzySh_Ta_uo

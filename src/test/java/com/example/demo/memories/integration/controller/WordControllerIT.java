@@ -40,7 +40,7 @@ class WordControllerIT {
     @Test
     public void testUploadFileSuccess() throws Exception {
 
-        doNothing().when(wordService).save(any());
+        doNothing().when(wordService).parseAndSave(any());
 
         MockMultipartFile file = new MockMultipartFile("file", "test-file.xlsx",
                 MediaType.MULTIPART_FORM_DATA_VALUE, "test data".getBytes());
@@ -51,7 +51,7 @@ class WordControllerIT {
                 .andExpect(jsonPath("$.message")
                 .value("File test-file.xlsx was uploaded successfully"));
 
-        then(wordService).should().save(file);
+        then(wordService).should().parseAndSave(file);
     }
 
     @Test
@@ -60,7 +60,7 @@ class WordControllerIT {
                 MediaType.MULTIPART_FORM_DATA_VALUE, "test data".getBytes());
 
         // Throw a FileValidationException when the service method is called
-        doThrow(new FileValidationException("Invalid file type")).when(wordService).save(any());
+        doThrow(new FileValidationException("Invalid file type")).when(wordService).parseAndSave(any());
 
         mockMvc.perform(multipart("/api/excel/upload")
                 .file(file))
@@ -69,7 +69,7 @@ class WordControllerIT {
                 .value("Invalid file type, please upload correct excel file"));
 
         // Verify that the service method was called
-        then(wordService).should().save(file);
+        then(wordService).should().parseAndSave(file);
     }
 
     @Test
@@ -79,7 +79,7 @@ class WordControllerIT {
 
         RuntimeException ex = new RuntimeException("Internal server error");
         // Throw an exception when the service method is called
-        doThrow(ex).when(wordService).save(any());
+        doThrow(ex).when(wordService).parseAndSave(any());
 
         mockMvc.perform(multipart("/api/excel/upload")
                 .file(file))
@@ -91,6 +91,6 @@ class WordControllerIT {
                         ((ResponseStatusException)result.getResolvedException()).getStatusCode()));
 
         // Verify that the service method was called
-        then(wordService).should().save(file);
+        then(wordService).should().parseAndSave(file);
     }
 }

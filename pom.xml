@@ -16,6 +16,7 @@
 	<properties>
 		<java.version>17</java.version>
 		<apache.poi.version>5.2.2</apache.poi.version>
+		<telegram.version>6.5.0</telegram.version>
 		<testcontainers.version>1.17.6</testcontainers.version>
 	</properties>
 	<dependencies>
@@ -42,6 +43,11 @@
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
 			<version>${apache.poi.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.telegram</groupId>
+			<artifactId>telegrambots</artifactId>
+			<version>${telegram.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

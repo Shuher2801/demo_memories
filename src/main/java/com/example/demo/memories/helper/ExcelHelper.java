@@ -35,6 +35,10 @@ public class ExcelHelper {
                     rowNumber++;
                     continue;
                 }
+                if (currentRow.getLastCellNum() < 3) {
+                    log.error("rowNumber: " + rowNumber + " contains " + currentRow.getLastCellNum() + " cells");
+                    continue;
+                }
 
                 Iterator<Cell> cellIterator = currentRow.iterator();
                 Word word = new Word();
@@ -51,7 +55,7 @@ public class ExcelHelper {
                         case 2 -> {
                             String epithet = currentCell.getStringCellValue();
                             String[] splitArray = epithet.split(",");
-                            word.setEpithets(new HashSet<>(Arrays.asList(splitArray)));
+                            word.setSynonyms(new HashSet<>(Arrays.asList(splitArray)));
                         }
                         case 3 -> {
                             String translate = currentCell.getStringCellValue();
