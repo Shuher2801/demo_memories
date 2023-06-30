@@ -25,7 +25,7 @@ public class WordController {
     @PostMapping(value = "/upload")
     public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file")MultipartFile file){
         try {
-            wordService.save(file);
+            wordService.parseAndSave(file);
             String message = String.format("File %s was uploaded successfully", file.getOriginalFilename());
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
         } catch (FileValidationException e){

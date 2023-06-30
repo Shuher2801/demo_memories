@@ -18,12 +18,12 @@ public class Word {
     private String word;
     private boolean isLearned;
 
-    @ElementCollection
-    @CollectionTable(name = "Epithets", joinColumns = @JoinColumn(name = "word_id"))
-    @Column(name = "epithet")
-    private Set<String> epithets;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "Synonyms", joinColumns = @JoinColumn(name = "word_id"))
+    @Column(name = "synonym")
+    private Set<String> synonyms;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "Translation", joinColumns = @JoinColumn(name = "word_id"))
     @Column(name = "translation")
     private Set<String> translation;
