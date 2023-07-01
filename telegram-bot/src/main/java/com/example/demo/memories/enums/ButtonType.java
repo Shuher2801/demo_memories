@@ -8,11 +8,6 @@ public enum ButtonType {
     REPEAT("Repeat"),
     NEXT(">>");
 
-    //upload from telegram
-    //grammar check
-    //idioms
-    //check excel
-
     private final String buttonText;
 
     ButtonType(String buttonText) {

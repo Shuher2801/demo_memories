@@ -1,9 +1,7 @@
 package com.example.demo.memories.controller;
 
-
 import com.example.demo.memories.enums.ButtonType;
 import com.example.demo.memories.service.WordStorageHandler;
-import com.example.demo.memories.utils.ButtonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -71,9 +69,14 @@ public class EnglishLearningToolbarUpdateProcessor implements ToolbarProcessor {
 
     @Override
     public void processLearningCommand(Update update) {
+        var wordValue = wordStorageHandler.getWordValue(telegramBot.getCurrentOption());
+        if(wordValue.isEmpty()){
+            telegramBot.sendMessage(update, NO_WORDS);
+            return;
+        }
         var message = SendMessage.builder()
                 .chatId(update.getMessage().getChatId())
-                .text(wordStorageHandler.getWordValue(telegramBot.getCurrentOption()))
+                .text(wordValue)
                 .build();
         var inlineKeyboardMarkup = getInlineKeyboardMarkup(selectKeyboard());
         message.setReplyMarkup(inlineKeyboardMarkup);

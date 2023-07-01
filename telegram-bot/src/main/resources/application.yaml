@@ -5,8 +5,8 @@ server:
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/memories
-    username: postgres
-    password: 123
+    username:
+    password:
     driver-class-name: org.postgresql.Driver
   jpa:
     database: postgresql
@@ -24,4 +24,4 @@ spring:
 
 bot:
   name: my_spring_boot_bot
-  token: 
+  token:

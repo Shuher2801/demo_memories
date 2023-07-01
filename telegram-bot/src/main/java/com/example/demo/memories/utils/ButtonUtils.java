@@ -12,6 +12,7 @@ import java.util.List;
 public class ButtonUtils {
 
     public static final String INCORRECT_COMMAND = "Sorry, command was not recognized";
+    public static final String NO_WORDS = "Sorry, there are no words for this option";
     public static List<ButtonType> russianCommandButtons = Arrays.asList(
             ButtonType.ENGLISH,
             ButtonType.SYNONYM,
@@ -49,6 +50,6 @@ public class ButtonUtils {
     }
 
     public static String convertCollectionToString (Collection<String> collection ){
-        return collection.stream().reduce((a, b) -> a + ", " + b).orElseGet(() -> "");
+        return collection.stream().reduce((a, b) -> a + ", " + b).orElse("");
     }
 }

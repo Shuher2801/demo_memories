@@ -103,7 +103,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         return botConfig.getName();
     }
 
-    private void sendMessage(Update update, String text) {
+    public void sendMessage(Update update, String text) {
         var message = SendMessage.builder()
                 .chatId(update.getMessage().getChatId())
                 .text(text)

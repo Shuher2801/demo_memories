@@ -10,20 +10,19 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.*;
 
-
 @Slf4j
 public class ExcelHelper {
 
     private static final String SHEET = "Words";
-    public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+    public static final String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
     public static List<Word> extractWordsFromExcel(MultipartFile file) {
         validateFile(file);
         List<Word> words;
         try (Workbook workbook = new XSSFWorkbook(file.getInputStream())) {
-            Sheet sheet = workbook.getSheet(SHEET);
+            var sheet = workbook.getSheet(SHEET);
 
-            Iterator<Row> rowIterator = sheet.iterator();
+            var rowIterator = sheet.iterator();
             words = new ArrayList<>();
 
             int rowNumber = 0;
