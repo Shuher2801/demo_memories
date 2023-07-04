@@ -34,8 +34,7 @@ public class ExcelHelper {
                     rowNumber++;
                     continue;
                 }
-                if (currentRow.getLastCellNum() < 3) {
-                    log.error("rowNumber: " + rowNumber + " contains " + currentRow.getLastCellNum() + " cells");
+                if (currentRow.getLastCellNum() < 3 || currentRow.getCell(1).getStringCellValue().isEmpty()) {
                     continue;
                 }
 
@@ -49,7 +48,7 @@ public class ExcelHelper {
                     switch (cellIdx) {
                         case 1 -> {
                             String englishWord = currentCell.getStringCellValue();
-                            word.setWord(englishWord);
+                            word.setWord(englishWord.trim().toLowerCase());
                         }
                         case 2 -> {
                             String epithet = currentCell.getStringCellValue();

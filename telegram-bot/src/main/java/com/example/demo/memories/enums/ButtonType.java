@@ -6,7 +6,9 @@ public enum ButtonType {
     SYNONYM("Synonym"),
     LEARNED("Learned"),//✅
     REPEAT("Repeat"),
-    NEXT(">>");
+    NEXT(">>"),
+    PROMPT("prompt"),
+    SKIP("skip");
 
     private final String buttonText;
 
