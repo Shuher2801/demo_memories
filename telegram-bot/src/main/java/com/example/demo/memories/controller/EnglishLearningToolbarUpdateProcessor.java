@@ -11,6 +11,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import java.util.List;
 
 import static com.example.demo.memories.utils.ButtonUtils.*;
+import static com.example.demo.memories.utils.MessageUtils.*;
 
 @Slf4j
 @Component
@@ -45,10 +46,18 @@ public class EnglishLearningToolbarUpdateProcessor implements ToolbarProcessor {
 
     @Override
     public void processLearnedWord(Update update) {
-        wordStorageHandler.saveCurrentWordAsLearned(telegramBot.getCurrentOption());
+        wordStorageHandler.saveIsLearned(true);
         var wordValue = wordStorageHandler.getWordValue(telegramBot.getCurrentOption());
         editMessageText.setText(wordValue);
-        setReplyMarkupAndExecuteMessage(selectKeyboard());
+        setReplyMarkupAndExecuteMessage(selectKeyboard(telegramBot.getCurrentOption()));
+    }
+
+    @Override
+    public void processLearnAgain(Update update) {
+        wordStorageHandler.saveIsLearned(false);
+        var wordValue = wordStorageHandler.getWordValue(telegramBot.getCurrentOption());
+        editMessageText.setText(wordValue);
+        setReplyMarkupAndExecuteMessage(selectKeyboard(telegramBot.getCurrentOption()));
     }
 
     @Override
@@ -56,7 +65,7 @@ public class EnglishLearningToolbarUpdateProcessor implements ToolbarProcessor {
         setMessageIdAndChatId(update);
         var wordValue = wordStorageHandler.getWordValue(telegramBot.getCurrentOption());
         editMessageText.setText(wordValue);
-        setReplyMarkupAndExecuteMessage(selectKeyboard());
+        setReplyMarkupAndExecuteMessage(selectKeyboard(telegramBot.getCurrentOption()));
     }
 
     @Override
@@ -74,11 +83,8 @@ public class EnglishLearningToolbarUpdateProcessor implements ToolbarProcessor {
             telegramBot.sendMessage(update, NO_WORDS);
             return;
         }
-        var message = SendMessage.builder()
-                .chatId(update.getMessage().getChatId())
-                .text(wordValue)
-                .build();
-        var inlineKeyboardMarkup = getInlineKeyboardMarkup(selectKeyboard());
+        var message = createSendMessage(update, wordValue);
+        var inlineKeyboardMarkup = getInlineKeyboardMarkup(selectKeyboard(telegramBot.getCurrentOption()));
         message.setReplyMarkup(inlineKeyboardMarkup);
         telegramBot.executeMessage(message);
     }
@@ -92,13 +98,5 @@ public class EnglishLearningToolbarUpdateProcessor implements ToolbarProcessor {
         var inlineKeyboardMarkup = getInlineKeyboardMarkup(buttonTypes);
         editMessageText.setReplyMarkup(inlineKeyboardMarkup);
         telegramBot.executeMessage(editMessageText);
-    }
-
-    private List<ButtonType> selectKeyboard(){
-        if(telegramBot.getCurrentOption().getCommand().startsWith("/ru")){
-           return russianCommandButtons;
-        }else{
-           return englishCommandButtons;
-        }
     }
 }

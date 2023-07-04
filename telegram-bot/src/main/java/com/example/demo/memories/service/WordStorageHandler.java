@@ -10,12 +10,12 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 
 import static com.example.demo.memories.enums.BotCommandType.*;
-import static com.example.demo.memories.utils.ButtonUtils.convertCollectionToString;
+import static com.example.demo.memories.utils.MessageUtils.convertCollectionToString;
 
 @Component
 @Slf4j
 public class WordStorageHandler {
-    private Word word;
+    private Word word = new Word();
     private BotCommandType previousOption;
     private List<Word> persistedWords;
     private List<Word> words = new ArrayList<>();
@@ -37,11 +37,11 @@ public class WordStorageHandler {
 
         if(words.isEmpty()) {
             switch (option){
-                case EN_RU_NEW, RU_EN_NEW -> words = new ArrayList<>(persistedWords
+                case EN_RU_NEW, RU_EN_NEW, GRAMMAR_NEW -> words = new ArrayList<>(persistedWords
                         .stream()
                         .filter(w -> !w.isLearned())
                         .toList());
-                case EN_RU_OLD, RU_EN_OLD -> words = new ArrayList<>(persistedWords
+                case EN_RU_OLD, RU_EN_OLD, GRAMMAR_OLD -> words = new ArrayList<>(persistedWords
                         .stream()
                         .filter(Word::isLearned)
                         .toList());
@@ -55,7 +55,7 @@ public class WordStorageHandler {
         updateWordsBasedOnOption(option);
 
         word = getNextWord(option);
-        if(word.getWord().isEmpty()){
+        if(word.getWord() == null){
             return Strings.EMPTY;
         }
         switch (option){
@@ -89,9 +89,9 @@ public class WordStorageHandler {
         return word;
     }
 
-    public void saveCurrentWordAsLearned(BotCommandType currentOption) {
+    public void saveIsLearned(boolean status) {
         Word word = getCurrentWord();
-        word.setLearned(true);
+        word.setLearned(status);
         repository.save(word);
         persistedWords = repository.findAll();
     }

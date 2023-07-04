@@ -16,17 +16,19 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import static com.example.demo.memories.utils.ButtonUtils.INCORRECT_COMMAND;
+import static com.example.demo.memories.utils.MessageUtils.*;
 
 @Component
 @Slf4j
 public class TelegramBot extends TelegramLongPollingBot {
-
+    private static final String GRAMMAR ="/grammar";
     private BotCommandType currentOption = null;
     @Autowired
     private EnglishLearningToolbarUpdateProcessor englishLearningToolbarUpdateProcessor;
     @Autowired
     private GeneralOptionsUpdateProcessor generalOptionsUpdateProcessor;
+    @Autowired
+    private GrammarCheckUpdateProcessor grammarProcessor;
     @Autowired
     private BotCommandStorage botCommandStorage;
     private final BotConfig botConfig;
@@ -40,6 +42,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     public void init(){
         englishLearningToolbarUpdateProcessor.registerBot(this);
         generalOptionsUpdateProcessor.registerBot(this);
+        grammarProcessor.registerBot(this);
         try{
             var setMyCommands = SetMyCommands.builder()
                     .commands(botCommandStorage.getBotCommands())
@@ -65,10 +68,26 @@ public class TelegramBot extends TelegramLongPollingBot {
     }
 
     private void updateByMessage(Update update) {
-        var messageText = update.getMessage().getText();
+        var messageText = update.getMessage().getText().trim().toLowerCase();
 
+        if(messageText.startsWith("/")){
+            commandProcessing(messageText, update);
+        } else {
+            textProcessing(messageText, update);
+        }
+    }
+
+    private void textProcessing(String messageText, Update update) {
+        if(currentOption!=null && currentOption.getCommand().startsWith(GRAMMAR)){
+            grammarProcessor.checkAnswer(update, messageText);
+        } else {
+            sendMessage(update, CHOSE_OPTION);
+        }
+    }
+
+    private void commandProcessing(String messageText, Update update) {
         var command = BotCommandType.fromCommand(messageText);
-        if(command== null){
+        if(command == null){
             sendMessage(update, INCORRECT_COMMAND);
             return;
         }
@@ -77,6 +96,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             case START -> generalOptionsUpdateProcessor.processStartCommand(update);
             case EN_RU_ALL, RU_EN_ALL, RU_EN_OLD, EN_RU_OLD, EN_RU_NEW, RU_EN_NEW ->
                     englishLearningToolbarUpdateProcessor.processLearningCommand(update);
+            case GRAMMAR_ALL, GRAMMAR_NEW, GRAMMAR_OLD -> grammarProcessor.process(update);
         }
     }
 
@@ -95,6 +115,9 @@ public class TelegramBot extends TelegramLongPollingBot {
             case ENGLISH -> englishLearningToolbarUpdateProcessor.processEnglishWord(update);
             case NEXT -> englishLearningToolbarUpdateProcessor.processNextWord(update);
             case LEARNED -> englishLearningToolbarUpdateProcessor.processLearnedWord(update);
+            case REPEAT -> englishLearningToolbarUpdateProcessor.processLearnAgain(update);
+            case PROMPT -> grammarProcessor.processOnPrompt(update);
+            case SKIP -> grammarProcessor.processOnSkip(update);
         }
     }
 
@@ -104,10 +127,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     }
 
     public void sendMessage(Update update, String text) {
-        var message = SendMessage.builder()
-                .chatId(update.getMessage().getChatId())
-                .text(text)
-                .build();
+        var message = createSendMessage(update, text);
         executeMessage(message);
     }
     public void executeMessage(SendMessage message) {
