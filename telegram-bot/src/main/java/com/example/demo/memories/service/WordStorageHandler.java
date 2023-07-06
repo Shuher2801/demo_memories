@@ -1,28 +1,28 @@
 package com.example.demo.memories.service;
 
+import com.example.demo.memories.client.WordClient;
 import com.example.demo.memories.enums.BotCommandType;
-import com.example.demo.memories.model.Word;
-import com.example.demo.memories.repository.WordRepository;
+import com.example.demo.memories.dto.Word;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.util.Strings;
-import org.springframework.stereotype.Component;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 import static com.example.demo.memories.enums.BotCommandType.*;
 import static com.example.demo.memories.utils.MessageUtils.convertCollectionToString;
 
-@Component
+@Service
 @Slf4j
 public class WordStorageHandler {
     private Word word = new Word();
     private BotCommandType previousOption;
     private List<Word> persistedWords;
     private List<Word> words = new ArrayList<>();
-    private final WordRepository repository;
+    private final WordClient wordClient;
 
-    public WordStorageHandler(WordRepository repository) {
-        this.repository = repository;
+    public WordStorageHandler(WordClient wordClient) {
+        this.wordClient = wordClient;
     }
 
     public Word getCurrentWord() {
@@ -32,7 +32,7 @@ public class WordStorageHandler {
     public Word getNextWord(BotCommandType option) {
 
         if(persistedWords == null){
-            persistedWords = repository.findAll();
+            persistedWords = wordClient.getAllWords();
         }
 
         if(words.isEmpty()) {
@@ -56,7 +56,7 @@ public class WordStorageHandler {
 
         word = getNextWord(option);
         if(word.getWord() == null){
-            return Strings.EMPTY;
+            return StringUtils.EMPTY;
         }
         switch (option){
             case EN_RU_ALL, EN_RU_NEW, EN_RU_OLD -> {return word.getWord();}
@@ -92,7 +92,7 @@ public class WordStorageHandler {
     public void saveIsLearned(boolean status) {
         Word word = getCurrentWord();
         word.setLearned(status);
-        repository.save(word);
-        persistedWords = repository.findAll();
+        wordClient.updateWord(word);
+        persistedWords = wordClient.getAllWords();
     }
 }

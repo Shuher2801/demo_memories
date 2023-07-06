@@ -1,27 +1,10 @@
 server:
   port: 8086
 
-
-spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/memories
-    username:
-    password:
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    database: postgresql
-    hibernate:
-      dialect: org.hibernate.dialect.PostgreSQLDialect
-      ddl-auto: update
-      jdbc:
-        lob:
-          non_contextual_creation: true
-    show-sql: true
-  servlet:
-    multipart:
-      max-file-size: 2MB
-      max-request-size: 2MB
-
 bot:
   name: my_spring_boot_bot
   token:
+
+api:
+  host:
+    baseurl: http://localhost:8085/v1/words

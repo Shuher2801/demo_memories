@@ -1,7 +1,7 @@
 package com.example.demo.memories.controller;
 
 import com.example.demo.memories.enums.ButtonType;
-import com.example.demo.memories.model.Word;
+import com.example.demo.memories.dto.Word;
 import com.example.demo.memories.service.WordStorageHandler;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;

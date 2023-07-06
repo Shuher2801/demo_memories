@@ -4,7 +4,6 @@ import com.example.demo.memories.config.BotConfig;
 import com.example.demo.memories.enums.BotCommandType;
 import com.example.demo.memories.enums.ButtonType;
 import com.example.demo.memories.utils.BotCommandStorage;
-import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,6 +14,7 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageTe
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import javax.annotation.PostConstruct;
 
 import static com.example.demo.memories.utils.MessageUtils.*;
 
