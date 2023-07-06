@@ -4,7 +4,6 @@ import com.example.demo.memories.enums.ButtonType;
 import com.example.demo.memories.service.WordStorageHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
