@@ -19,7 +19,6 @@ import org.springframework.web.server.ResponseStatusException;
 @RequiredArgsConstructor
 @Slf4j
 public class FileUploadController {
-
     private final WordService wordService;
 
     @PostMapping(value = "/upload")
