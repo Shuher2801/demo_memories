@@ -44,6 +44,7 @@ public class WordController {
                         String.format("Could not find word with id: %d", id)));
     }
 
+    @Operation(description = "save word")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public Long saveWord(@RequestBody Word word){
         log.info(word.toString());
@@ -51,6 +52,7 @@ public class WordController {
         return savedWord.getId();
     }
 
+    @Operation(description = "update word by id")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public Word updateWord(@RequestBody Word newWord, @PathVariable Long id){
@@ -64,16 +66,19 @@ public class WordController {
                 .orElseGet(() -> wordRepository.save(newWord));
     }
 
+    @Operation(description = "delete word by id")
     @DeleteMapping("/{id}")
     public void deleteWord(@PathVariable Long id){
         wordRepository.deleteById(id);
     }
 
+    @Operation(description = "return page of words")
     @GetMapping("/page")
     public Page<Word> getWordsPage (@ParameterObject Pageable pageable){
        return wordRepository.findAll(pageable);
     }
 
+    @Operation(description = "return list of all words")
     @GetMapping()
     public List<Word> getAll(){
         return wordRepository.findAll();

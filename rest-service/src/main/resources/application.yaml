@@ -16,10 +16,17 @@ spring:
         lob:
           non_contextual_creation: true
     show-sql: true
+    properties:
+      hibernate:
+        cache:
+          use_second_level_cache: true
+          region:
+            factory_class: com.hazelcast.hibernate.HazelcastCacheRegionFactory
   servlet:
     multipart:
       max-file-size: 2MB
       max-request-size: 2MB
+
 
 #swagger-ui config
 springdoc:

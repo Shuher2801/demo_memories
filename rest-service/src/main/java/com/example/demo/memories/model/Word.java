@@ -2,6 +2,8 @@ package com.example.demo.memories.model;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -10,6 +12,7 @@ import java.util.Set;
 @Table(name = "EnglishWord")
 @Data
 @RequiredArgsConstructor
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Word {
 
     @Id
@@ -21,10 +24,12 @@ public class Word {
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "Synonyms", joinColumns = @JoinColumn(name = "word_id"))
     @Column(name = "synonym")
+    @Cache (usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<String> synonyms;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "Translation", joinColumns = @JoinColumn(name = "word_id"))
     @Column(name = "translation")
+    @Cache (usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<String> translation;
 }

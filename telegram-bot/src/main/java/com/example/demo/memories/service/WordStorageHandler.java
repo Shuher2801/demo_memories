@@ -31,7 +31,7 @@ public class WordStorageHandler {
 
     public Word getNextWord(BotCommandType option) {
 
-        if(persistedWords == null){
+        if(persistedWords == null || persistedWords.isEmpty()){
             persistedWords = wordClient.getAllWords();
         }
 

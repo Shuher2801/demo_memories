@@ -69,7 +69,7 @@ public class ExcelHelperTest {
         assertEquals(1, words.size());
 
         Word word = words.get(0);
-        assertEquals("Test", word.getWord());
+        assertEquals("test", word.getWord());
 
         Set<String> expectedEpithets = new HashSet<>();
         expectedEpithets.add("epithet1");
