@@ -11,12 +11,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
+
 @ActiveProfiles("integration-test")
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = UploadApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -26,20 +25,48 @@ public class WordRepositoryIT extends ContainersEnvironment {
     private WordRepository wordRepository;
 
     @Test
-    void testRepo(){
-        Word word = new Word();
-        word.setWord("Hello");
-        Set<String> epithets = new HashSet<>();
-        epithets.add("Hi");
-        word.setSynonyms(epithets);
-        Set<String> translate = new HashSet<>();
-        translate.add("привет");
-        word.setTranslation(translate);
+    void testSave(){
+        Word word = getWord();
 
         wordRepository.save(word);
 
         Word persisted = wordRepository.findAll().get(0);
         assertNotNull(persisted.getId());
         assertEquals(persisted.getWord(), "Hello");
+    }
+
+    @Test
+    void testFindById(){
+        Word word = getWord();
+
+        Word savedWord = wordRepository.save(word);
+
+        Word persisted = wordRepository.findById(savedWord.getId()).get();
+        assertNotNull(persisted.getId());
+        assertEquals(persisted.getWord(), "Hello");
+    }
+
+    @Test
+    void testDelete(){
+        Word word = getWord();
+
+        Word savedWord = wordRepository.save(word);
+
+        Word persisted = wordRepository.findById(savedWord.getId()).get();
+        Long id = persisted.getId();
+        assertNotNull(id);
+        assertEquals(persisted.getWord(), "Hello");
+
+        wordRepository.deleteById(id);
+        Optional<Word> byId = wordRepository.findById(id);
+        assertTrue(byId.isEmpty());
+    }
+
+    private  Word getWord() {
+        Word word = new Word();
+        word.setWord("Hello");
+        word.setSynonyms(Set.of("Hi"));
+        word.setTranslation(Set.of("Привет"));
+        return word;
     }
 }
