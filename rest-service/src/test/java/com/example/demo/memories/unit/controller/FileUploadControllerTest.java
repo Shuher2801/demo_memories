@@ -4,10 +4,11 @@ import com.example.demo.memories.controller.FileUploadController;
 import com.example.demo.memories.exception.FileValidationException;
 import com.example.demo.memories.message.ResponseMessage;
 import com.example.demo.memories.service.WordService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
@@ -22,21 +23,24 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 
-@SpringBootTest
 @ActiveProfiles("unit-test")
+@ExtendWith(MockitoExtension.class)
 public class FileUploadControllerTest {
 
     @Mock
     WordService wordServiceMock;
-    @InjectMocks
     FileUploadController fileUploadController;
 
+    @BeforeEach
+    public void setup() {
+        fileUploadController = new FileUploadController(wordServiceMock);
+    }
     @Test
     public void testUploadFileSuccessfully(){
 
         MultipartFile file = mock(MultipartFile.class);
         when(file.getOriginalFilename()).thenReturn("TestFile");
-
+        doNothing().when(wordServiceMock).parseAndSave(any());
         ResponseEntity<ResponseMessage> response =  fileUploadController.uploadFile(file);
 
         assertEquals(response.getStatusCode(), HttpStatus.OK);
@@ -50,23 +54,21 @@ public class FileUploadControllerTest {
         MultipartFile file = mock(MultipartFile.class);
         FileValidationException exception = new FileValidationException("Invalid file type");
         doThrow(exception).when(wordServiceMock).parseAndSave(any());
-
         ResponseEntity<ResponseMessage> response =  fileUploadController.uploadFile(file);
 
         assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
-        assertEquals("Invalid file type, please upload correct excel file", Objects.requireNonNull(response.getBody()).getMessage());
+        assertEquals("Invalid file type, please upload correct excel file",
+                Objects.requireNonNull(response.getBody()).getMessage());
         verify(wordServiceMock, times(1)).parseAndSave(file);
     }
 
     @Test
     public void testUploadFileThrowsException(){
-
         MultipartFile file = mock(MultipartFile.class);
         when(file.getOriginalFilename()).thenReturn("TestFile");
 
         RuntimeException exception = new RuntimeException("Invalid file type");
         doThrow(exception).when(wordServiceMock).parseAndSave(file);
-
         ResponseStatusException responseStatusException =
                 assertThrows(ResponseStatusException.class, ()-> fileUploadController.uploadFile(file));
         assertEquals(responseStatusException.getStatus(), HttpStatus.EXPECTATION_FAILED);

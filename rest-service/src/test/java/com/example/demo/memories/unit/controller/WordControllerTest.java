@@ -1,11 +1,15 @@
 package com.example.demo.memories.unit.controller;
 
+import com.example.demo.memories.controller.FileUploadController;
 import com.example.demo.memories.controller.WordController;
 import com.example.demo.memories.model.Word;
 import com.example.demo.memories.repository.WordRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,14 +25,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
 @ActiveProfiles("unit-test")
+@ExtendWith(MockitoExtension.class)
 public class WordControllerTest {
     @Mock
     WordRepository wordRepositoryMock;
 
-    @InjectMocks
     WordController wordController;
+    @BeforeEach
+    public void setup() {
+        wordController = new WordController(wordRepositoryMock);
+    }
 
     @Test
     public void testGetWord(){
