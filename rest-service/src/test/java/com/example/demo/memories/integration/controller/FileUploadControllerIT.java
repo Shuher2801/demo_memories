@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @ActiveProfiles("integration-test")
 @WebMvcTest(FileUploadController.class)
-class WordControllerIT {
+class FileUploadControllerIT {
 
     @MockBean
     private WordService wordService;
