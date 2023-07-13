@@ -34,3 +34,5 @@ jobs:
     - name: Run integration tests
       run: mvn verify -Pintegration-test
       
+    - name: Run JaCoCo coverage check
+      run: mvn jacoco:check
