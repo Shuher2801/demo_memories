@@ -10,8 +10,7 @@ redis:
 
 bot:
   name: my_spring_boot_bot
-  token: 6166202220:AAHjOuEIb3m_vx-lDvAZQyG-tCykb7h1jw4
-
+  token:
 api:
   host:
     baseurl: http://localhost:8085/v1/words
