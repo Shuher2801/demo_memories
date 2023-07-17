@@ -1,0 +1,47 @@
+version: '3'
+services:
+  rest-service:
+    build:
+      context: ./rest-service
+      dockerfile: Dockerfile
+    ports:
+      - "8085:8085"
+      - "8000:8000"  # Expose the debugging port
+    environment:
+      JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8000"
+    networks:
+      - your_network
+
+  telegram-bot:
+    build:
+      context: ./telegram-bot
+      dockerfile: Dockerfile
+    ports:
+      - "8086:8086"
+      - "8001:8001"  # Expose the debugging port
+    environment:
+      JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8001"
+
+    networks:
+      - your_network
+
+  postgres:
+    image: postgres:13.3
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: memories
+    networks:
+      - your_network
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - your_network
+
+networks:
+  your_network:
