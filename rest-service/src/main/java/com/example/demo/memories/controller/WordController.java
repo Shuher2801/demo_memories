@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.api.annotations.ParameterObject;
@@ -46,7 +47,7 @@ public class WordController {
 
     @Operation(description = "save word")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Long saveWord(@RequestBody Word word){
+    public Long saveWord(@RequestBody @NonNull Word word){
         log.info(word.toString());
         Word savedWord = wordRepository.save(word);
         return savedWord.getId();

@@ -2,7 +2,7 @@ server:
   port: 8086
 
 redis:
-  host: localhost
+  host: redis
   port: 6379
   password: test123
   cache:
@@ -13,4 +13,4 @@ bot:
   token:
 api:
   host:
-    baseurl: http://localhost:8085/v1/words
+    baseurl: http://rest-service:8085/v1/words
