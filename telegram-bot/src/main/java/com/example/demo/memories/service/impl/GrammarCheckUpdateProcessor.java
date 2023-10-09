@@ -1,5 +1,6 @@
-package com.example.demo.memories.controller;
+package com.example.demo.memories.service.impl;
 
+import com.example.demo.memories.controller.TelegramBot;
 import com.example.demo.memories.enums.ButtonType;
 import com.example.demo.memories.dto.Word;
 import com.example.demo.memories.service.WordStorageHandler;

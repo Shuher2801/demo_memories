@@ -22,7 +22,7 @@ public class WordClientImpl implements WordClient {
     @Override
     @Cacheable("wordListCache")
     public List<Word> getAllWords() {
-            ResponseEntity<Word[]> response = restTemplate.getForEntity("", Word[].class);
+            ResponseEntity<Word[]> response = restTemplate.getForEntity("v1/words", Word[].class);
             return Arrays.asList(response.getBody());
     }
 
@@ -30,6 +30,6 @@ public class WordClientImpl implements WordClient {
     @Override
     public void updateWord(Word word) {
         var id = word.getId();
-        restTemplate.put(String.format("/%d", id), word);
+        restTemplate.put("v1/words", String.format("/%d", id), word);
     }
 }

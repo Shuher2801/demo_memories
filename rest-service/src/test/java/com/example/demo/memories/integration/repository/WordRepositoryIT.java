@@ -38,24 +38,26 @@ public class WordRepositoryIT extends ContainersEnvironment {
     @Test
     void testFindById(){
         Word word = getWord();
+        word.setWord("Hello3");
 
         Word savedWord = wordRepository.save(word);
 
         Word persisted = wordRepository.findById(savedWord.getId()).get();
         assertNotNull(persisted.getId());
-        assertEquals(persisted.getWord(), "Hello");
+        assertEquals(persisted.getWord(), "Hello3");
     }
 
     @Test
     void testDelete(){
         Word word = getWord();
+        word.setWord("Hello4");
 
         Word savedWord = wordRepository.save(word);
 
         Word persisted = wordRepository.findById(savedWord.getId()).get();
         Long id = persisted.getId();
         assertNotNull(id);
-        assertEquals(persisted.getWord(), "Hello");
+        assertEquals(persisted.getWord(), "Hello4");
 
         wordRepository.deleteById(id);
         Optional<Word> byId = wordRepository.findById(id);

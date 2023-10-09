@@ -3,6 +3,7 @@ server:
 
 redis:
   host: redis
+#  host: localhost
   port: 6379
   password: test123
   cache:
@@ -13,4 +14,14 @@ bot:
   token:
 api:
   host:
-    baseurl: http://rest-service:8085/v1/words
+#    baseurl: http://rest-service:8085/v1/words
+    baseurl: http://rest-service:8085
+#    baseurl: http://localhost:8085
+
+service:
+  file_upload:
+    uri: /api/excel/upload
+  file_storage:
+    uri: https://api.telegram.org/file/bot{token}/{filePath}
+  file_info:
+    uri: https://api.telegram.org/bot{token}/getFile?file_id={fileId}

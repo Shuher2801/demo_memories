@@ -3,6 +3,10 @@ package com.example.demo.memories.controller;
 import com.example.demo.memories.config.BotConfig;
 import com.example.demo.memories.enums.BotCommandType;
 import com.example.demo.memories.enums.ButtonType;
+import com.example.demo.memories.service.impl.DocumentProcessor;
+import com.example.demo.memories.service.impl.EnglishLearningToolbarUpdateProcessor;
+import com.example.demo.memories.service.impl.GeneralOptionsUpdateProcessor;
+import com.example.demo.memories.service.impl.GrammarCheckUpdateProcessor;
 import com.example.demo.memories.utils.BotCommandStorage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +19,15 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import javax.annotation.PostConstruct;
-
+import java.util.Optional;
 import static com.example.demo.memories.utils.MessageUtils.*;
 
 @Component
 @Slf4j
 public class TelegramBot extends TelegramLongPollingBot {
+
+    private static final String SHEET = "Words";
+
     private static final String GRAMMAR ="/grammar";
     private BotCommandType currentOption = null;
     @Autowired
@@ -31,6 +38,8 @@ public class TelegramBot extends TelegramLongPollingBot {
     private GrammarCheckUpdateProcessor grammarProcessor;
     @Autowired
     private BotCommandStorage botCommandStorage;
+    @Autowired
+    private DocumentProcessor documentProcessor;
     private final BotConfig botConfig;
 
     public TelegramBot(BotConfig botConfig){
@@ -43,6 +52,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         englishLearningToolbarUpdateProcessor.registerBot(this);
         generalOptionsUpdateProcessor.registerBot(this);
         grammarProcessor.registerBot(this);
+        documentProcessor.registerBot(this);
         try{
             var setMyCommands = SetMyCommands.builder()
                     .commands(botCommandStorage.getBotCommands())
@@ -55,15 +65,21 @@ public class TelegramBot extends TelegramLongPollingBot {
     }
     @Override
     public void onUpdateReceived(Update update) {
+
+        Optional.ofNullable(update)
+                .filter(u -> u.hasMessage() && u.getMessage().hasText())
+                .ifPresent(this::updateByMessage);
+
+        Optional.ofNullable(update)
+                .filter(u -> u.hasMessage() && u.getMessage().hasDocument())
+                .ifPresent(this::processDocument);
+
+        Optional.ofNullable(update)
+                .filter(Update::hasCallbackQuery)
+                .ifPresent(this::updateByCallbackQuery);
+
         if(update == null){
             log.error("Received update is null");
-            return;
-        }
-        if(update.hasMessage() && update.getMessage().hasText()){
-            updateByMessage(update);
-        }
-        if(update.hasCallbackQuery()){
-            updateByCallbackQuery(update);
         }
     }
 
@@ -98,6 +114,10 @@ public class TelegramBot extends TelegramLongPollingBot {
                     englishLearningToolbarUpdateProcessor.processLearningCommand(update);
             case GRAMMAR_ALL, GRAMMAR_NEW, GRAMMAR_OLD -> grammarProcessor.process(update);
         }
+    }
+
+    private void processDocument(Update update) {
+        documentProcessor.processDocument(update);
     }
 
     private void updateByCallbackQuery(Update update) {
